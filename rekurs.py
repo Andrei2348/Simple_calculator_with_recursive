@@ -20,34 +20,7 @@
 #     (1+2)*3 => 9;
 # Тут может помочь библиотека re
 
-
-# example = re.match( r'[+-/*]', math_expression, re.M|re.X)
-# print(re.findall(r'[+-/*]', math_expression))
-# print(re.findall(r'\d', math_expression))
-
-# print(re.search(r'(\d+(\.|,)?\d*)(\s?)([+-/*]?)(\s?)', math_expression))
-
-# print(re.findall(r'(\d+(\.|,)?\d*)(\s?)([+-/*]?)(\s?)', math_expression))
-
-
-
-
 import re
-
-math_expression = input('Введите выражение: ')
-math_expression_list = (re.findall(r'(\d+(\.|,)?\d*)(\s?)([+-/*]?)(\s?)', math_expression))
-
-# Список элементов
-elems = []
-# Список знаков действия
-actions = []
-
-for elem in math_expression_list:
-   elems.append(float(elem[0]))
-   actions.append(elem[-2])
-
-print(elems)
-print(actions)
 
 def summa(a, b):
    return a + b
@@ -61,32 +34,9 @@ def multiply(a, b):
 def divide(a, b):
    return a / b
 
-# def get_result(first_elem, elems, actions, count):
-#    if count < len(actions):
-#       if actions[count - 1] == '+':
-#          first_elem = summa(first_elem, elems[count])
-
-#       if actions[count - 1] == '-':
-#          first_elem = minus(first_elem, elems[count])
-
-#       if actions[count - 1] == '*':
-#          first_elem = multiply(first_elem, elems[count])
-
-#       if actions[count - 1] == '/':
-#          first_elem = divide(first_elem, elems[count])
-
-#       first_elem = get_result(first_elem, elems, actions, count + 1)
-      
-#    return first_elem
-
-
-# first_elem = elems[0]
-# print(f'{math_expression} => {get_result(first_elem, elems, actions, 1)}')
-
-
 
 def get_result(first_elem, elems, actions, count):
-   if count < len(actions):
+   if count < (len(actions) + 1):
 
       match actions[count - 1]:
          case '+':
@@ -106,5 +56,59 @@ def get_result(first_elem, elems, actions, count):
    return first_elem
 
 
-first_elem = elems[0]
-print(f'{math_expression} => {get_result(first_elem, elems, actions, 1)}')
+
+math_expression = input('Введите выражение: ')
+math_expression_list = (re.findall(r'(\d+(\.|,)?\d*)(\s?)([+-/*]?)(\s?)', math_expression))
+
+# Список элементов
+elems = []
+# Список знаков действия
+actions = []
+
+for elem in math_expression_list:
+   elems.append(float(elem[0]))
+   actions.append(elem[-2])
+
+# print(elems)
+# print(actions)
+
+
+low_priority_action = []
+low_priority_elem = []
+
+
+flag = False
+for index in range(0, len(actions)):
+   if actions[index] == '*':
+      if flag:
+         low_priority_elem[-1] = multiply(low_priority_elem[-1], elems[index + 1])
+      else:
+         elem = multiply(elems[index], elems[index + 1])
+         flag = True
+         low_priority_elem.append(elem)
+      
+   if actions[index] == '/':
+      if flag:
+         low_priority_elem[-1] = divide(low_priority_elem[-1], elems[index + 1])
+      else:
+         elem = divide(elems[index], elems[index + 1])
+         flag = True
+         low_priority_elem.append(elem)
+   
+   if actions[index] == '+' or actions[index] == '-':
+      if flag == False:
+         low_priority_elem.append(elems[index])
+         low_priority_action.append(actions[index])
+      else:
+         flag = False
+         low_priority_action.append(actions[index])
+         
+   if actions[index] == '' and flag == False:
+      low_priority_elem.append(elems[index])
+   
+print(low_priority_elem)
+print(low_priority_action)
+   
+
+first_elem = low_priority_elem[0]
+print(f'{math_expression} => {get_result(first_elem, low_priority_elem, low_priority_action, 1)}')
