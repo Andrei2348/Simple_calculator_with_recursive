@@ -61,19 +61,45 @@ def multiply(a, b):
 def divide(a, b):
    return a / b
 
+# def get_result(first_elem, elems, actions, count):
+#    if count < len(actions):
+#       if actions[count - 1] == '+':
+#          first_elem = summa(first_elem, elems[count])
+
+#       if actions[count - 1] == '-':
+#          first_elem = minus(first_elem, elems[count])
+
+#       if actions[count - 1] == '*':
+#          first_elem = multiply(first_elem, elems[count])
+
+#       if actions[count - 1] == '*':
+#          first_elem = divide(first_elem, elems[count])
+
+#       first_elem = get_result(first_elem, elems, actions, count + 1)
+      
+#    return first_elem
+
+
+# first_elem = elems[0]
+# print(f'{math_expression} => {get_result(first_elem, elems, actions, 1)}')
+
+
+
 def get_result(first_elem, elems, actions, count):
    if count < len(actions):
-      if actions[count - 1] == '+':
-         first_elem = summa(first_elem, elems[count])
 
-      if actions[count - 1] == '-':
-         first_elem = minus(first_elem, elems[count])
+      match actions[count - 1]:
+         case '+':
+            first_elem = summa(first_elem, elems[count])
 
-      if actions[count - 1] == '*':
-         first_elem = multiply(first_elem, elems[count])
+         case '-':
+            first_elem = minus(first_elem, elems[count])
 
-      if actions[count - 1] == '*':
-         first_elem = divide(first_elem, elems[count])
+         case '*':
+            first_elem = multiply(first_elem, elems[count])
+
+         case '*':
+            first_elem = divide(first_elem, elems[count])
 
       first_elem = get_result(first_elem, elems, actions, count + 1)
       
