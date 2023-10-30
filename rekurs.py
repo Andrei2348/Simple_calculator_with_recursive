@@ -72,7 +72,7 @@ def divide(a, b):
 #       if actions[count - 1] == '*':
 #          first_elem = multiply(first_elem, elems[count])
 
-#       if actions[count - 1] == '*':
+#       if actions[count - 1] == '/':
 #          first_elem = divide(first_elem, elems[count])
 
 #       first_elem = get_result(first_elem, elems, actions, count + 1)
@@ -98,7 +98,7 @@ def get_result(first_elem, elems, actions, count):
          case '*':
             first_elem = multiply(first_elem, elems[count])
 
-         case '*':
+         case '/':
             first_elem = divide(first_elem, elems[count])
 
       first_elem = get_result(first_elem, elems, actions, count + 1)
