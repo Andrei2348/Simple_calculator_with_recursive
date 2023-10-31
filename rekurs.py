@@ -34,8 +34,46 @@ def multiply(a, b):
 def divide(a, b):
    return a / b
 
+# Действия высокого приоритета
+def get_result_hight_priority(elems, actions):
+   low_priority_action = []
+   low_priority_elem = []
 
-def get_result(first_elem, elems, actions, count):
+   flag = False
+   for index in range(0, len(actions)):
+      if actions[index] == '*':
+         if flag:
+            low_priority_elem[-1] = multiply(low_priority_elem[-1], elems[index + 1])
+         else:
+            elem = multiply(elems[index], elems[index + 1])
+            flag = True
+            low_priority_elem.append(elem)
+         
+      if actions[index] == '/':
+         if flag:
+            low_priority_elem[-1] = divide(low_priority_elem[-1], elems[index + 1])
+         else:
+            elem = divide(elems[index], elems[index + 1])
+            flag = True
+            low_priority_elem.append(elem)
+      
+      if actions[index] == '+' or actions[index] == '-':
+         if flag == False:
+            low_priority_elem.append(elems[index])
+            low_priority_action.append(actions[index])
+         else:
+            flag = False
+            low_priority_action.append(actions[index])
+            
+      if actions[index] == '' and flag == False:
+         low_priority_elem.append(elems[index])
+      
+   print(low_priority_elem)
+   print(low_priority_action)
+   return low_priority_elem, low_priority_action
+
+
+def get_result_low_priority(first_elem, elems, actions, count):
    if count < (len(actions) + 1):
 
       match actions[count - 1]:
@@ -45,13 +83,7 @@ def get_result(first_elem, elems, actions, count):
          case '-':
             first_elem = minus(first_elem, elems[count])
 
-         case '*':
-            first_elem = multiply(first_elem, elems[count])
-
-         case '/':
-            first_elem = divide(first_elem, elems[count])
-
-      first_elem = get_result(first_elem, elems, actions, count + 1)
+      first_elem = get_result_low_priority(first_elem, elems, actions, count + 1)
       
    return first_elem
 
@@ -73,42 +105,14 @@ for elem in math_expression_list:
 # print(actions)
 
 
-low_priority_action = []
-low_priority_elem = []
 
 
-flag = False
-for index in range(0, len(actions)):
-   if actions[index] == '*':
-      if flag:
-         low_priority_elem[-1] = multiply(low_priority_elem[-1], elems[index + 1])
-      else:
-         elem = multiply(elems[index], elems[index + 1])
-         flag = True
-         low_priority_elem.append(elem)
-      
-   if actions[index] == '/':
-      if flag:
-         low_priority_elem[-1] = divide(low_priority_elem[-1], elems[index + 1])
-      else:
-         elem = divide(elems[index], elems[index + 1])
-         flag = True
-         low_priority_elem.append(elem)
-   
-   if actions[index] == '+' or actions[index] == '-':
-      if flag == False:
-         low_priority_elem.append(elems[index])
-         low_priority_action.append(actions[index])
-      else:
-         flag = False
-         low_priority_action.append(actions[index])
-         
-   if actions[index] == '' and flag == False:
-      low_priority_elem.append(elems[index])
-   
-print(low_priority_elem)
-print(low_priority_action)
+
    
 
-first_elem = low_priority_elem[0]
-print(f'{math_expression} => {get_result(first_elem, low_priority_elem, low_priority_action, 1)}')
+if '*' in actions or '/' in actions:
+   elems, actions = get_result_hight_priority(elems, actions)
+   
+
+first_elem = elems[0]
+print(f'{math_expression} => {get_result_low_priority(first_elem, elems, actions, 1)}')
