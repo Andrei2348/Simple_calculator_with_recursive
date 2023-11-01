@@ -20,99 +20,27 @@
 #     (1+2)*3 => 9;
 # Тут может помочь библиотека re
 
-import re
-
-def summa(a, b):
-   return a + b
-
-def minus(a, b):
-   return a - b
-
-def multiply(a, b):
-   return a * b
-
-def divide(a, b):
-   return a / b
-
-# Действия высокого приоритета
-def get_result_hight_priority(elems, actions):
-   low_priority_action = []
-   low_priority_elem = []
-
-   flag = False
-   for index in range(0, len(actions)):
-      if actions[index] == '*':
-         if flag:
-            low_priority_elem[-1] = multiply(low_priority_elem[-1], elems[index + 1])
-         else:
-            elem = multiply(elems[index], elems[index + 1])
-            flag = True
-            low_priority_elem.append(elem)
-         
-      if actions[index] == '/':
-         if flag:
-            low_priority_elem[-1] = divide(low_priority_elem[-1], elems[index + 1])
-         else:
-            elem = divide(elems[index], elems[index + 1])
-            flag = True
-            low_priority_elem.append(elem)
-      
-      if actions[index] == '+' or actions[index] == '-':
-         if flag == False:
-            low_priority_elem.append(elems[index])
-            low_priority_action.append(actions[index])
-         else:
-            flag = False
-            low_priority_action.append(actions[index])
-            
-      if actions[index] == '' and flag == False:
-         low_priority_elem.append(elems[index])
-      
-   print(low_priority_elem)
-   print(low_priority_action)
-   return low_priority_elem, low_priority_action
-
-
-def get_result_low_priority(first_elem, elems, actions, count):
-   if count < (len(actions) + 1):
-
-      match actions[count - 1]:
-         case '+':
-            first_elem = summa(first_elem, elems[count])
-
-         case '-':
-            first_elem = minus(first_elem, elems[count])
-
-      first_elem = get_result_low_priority(first_elem, elems, actions, count + 1)
-      
-   return first_elem
-
+from parentheses import get_result_highest_priority
+from lists_of_string import get_lists
+from hight_priority import get_result_hight_priority
+from low_priority import get_result_low_priority
 
 
 math_expression = input('Введите выражение: ')
-math_expression_list = (re.findall(r'(\d+(\.|,)?\d*)(\s?)([+-/*]?)(\s?)', math_expression))
 
-# Список элементов
-elems = []
-# Список знаков действия
-actions = []
+# Проверка наличия скобок в выражении
+if '(' in math_expression:
+   parentheses_expression = get_result_highest_priority(math_expression)
 
-for elem in math_expression_list:
-   elems.append(float(elem[0]))
-   actions.append(elem[-2])
+   # Получение результатов в скобках и замена скобок результатами вычисления
+   for elem in parentheses_expression:
+      elems, actions = get_lists(elem)
+      elems, actions = get_result_hight_priority(elems, actions)
+      first_elem = elems[0]
+      result = str(get_result_low_priority(first_elem, elems, actions, 1))
+      math_expression = math_expression.replace(elem, result, 1)
 
-# print(elems)
-# print(actions)
-
-
-
-
-
-   
-
-if '*' in actions or '/' in actions:
-   elems, actions = get_result_hight_priority(elems, actions)
-   
-
+elems, actions = get_lists(math_expression) 
+elems, actions = get_result_hight_priority(elems, actions)
 first_elem = elems[0]
 print(f'{math_expression} => {get_result_low_priority(first_elem, elems, actions, 1)}')
