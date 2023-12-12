@@ -1,4 +1,4 @@
-from actions import summa, minus
+from .actions import summa, minus
 
 def get_result_low_priority(first_elem, elems, actions, count):
    if count < (len(actions) + 1):

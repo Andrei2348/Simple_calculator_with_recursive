@@ -1,4 +1,4 @@
-from actions import multiply, divide
+from .actions import multiply, divide
 
 # Действия высокого приоритета
 def get_result_hight_priority(elems, actions):
