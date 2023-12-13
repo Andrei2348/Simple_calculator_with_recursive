@@ -1,4 +1,5 @@
 from .actions import multiply, divide
+from . import logging
 
 # Действия высокого приоритета
 def get_result_hight_priority(elems, actions):
@@ -23,7 +24,7 @@ def get_result_hight_priority(elems, actions):
                elem = divide(elems[index], elems[index + 1])
                flag = True
                low_priority_elem.append(elem)
-         
+         logging.write_log('Производим действия умножения и деления', 0)
          if actions[index] == '+' or actions[index] == '-':
             if flag == False:
                low_priority_elem.append(elems[index])
@@ -38,6 +39,7 @@ def get_result_hight_priority(elems, actions):
    else:
       low_priority_elem = elems
       low_priority_action = actions
+   logging.write_log('Формируем списки данных для действий сложения и вычитания', 0)
    return low_priority_elem, low_priority_action
 
 
