@@ -56,16 +56,14 @@ def get_result():
 
 
 if __name__ == '__main__':
-  parser = argparse.ArgumentParser(description='Калькулятор на tkinter')
-  try:
-    parser.add_argument('-r',
-                        action='store_true',
-                        help = 'для запуска калькулятора')
-    args = parser.parse_args()
-    if vars(args)['r'] == True:
+   parser = argparse.ArgumentParser(description='Калькулятор на tkinter')
+   parser.add_argument('-r',
+                     action='store_true',
+                     help = 'для запуска калькулятора')
+   args = parser.parse_args()
+   if vars(args)['r'] == True:
       print(get_result())
-  except:
-    print('Для запуска калькулятора введите "python calculator.py -r"')
+      print('Для запуска калькулятора введите "python calculator.py -r"')
 
 
 
